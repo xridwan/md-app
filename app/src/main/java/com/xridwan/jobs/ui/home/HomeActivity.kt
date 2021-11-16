@@ -1,9 +1,10 @@
 package com.xridwan.jobs.ui.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.xridwan.jobs.R
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.xridwan.jobs.databinding.ActivityHomeBinding
 import com.xridwan.jobs.room.StoreDb
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,15 +12,26 @@ import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
 
-    private val db by lazy {  StoreDb(this) }
+    private lateinit var binding: ActivityHomeBinding
+    private lateinit var homeAdapter: HomeAdapter
+    private val db by lazy { StoreDb(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         CoroutineScope(Dispatchers.Main).launch {
-            db.storeDao().getStoreList()
-            Log.e("onRoom", "onCreate: ${db.storeDao().getStoreList()}", )
+            val stores = db.storeDao().getStoreList() as ArrayList
+
+            homeAdapter = HomeAdapter()
+            homeAdapter.setData(stores)
+
+            binding.rvStores.layoutManager = LinearLayoutManager(this@HomeActivity)
+            binding.rvStores.setHasFixedSize(true)
+            binding.rvStores.adapter = homeAdapter
+
+            Log.e("onRoom", "onCreate: ${db.storeDao().getStoreList()}")
         }
     }
 }
