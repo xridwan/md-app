@@ -1,16 +1,23 @@
-package com.xridwan.jobs
+package com.xridwan.jobs.ui.main
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.xridwan.jobs.databinding.ActivityMainBinding
+import com.xridwan.jobs.room.StoreDb
+import com.xridwan.jobs.ui.home.HomeActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel>()
+    private val db by lazy { StoreDb(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,8 +25,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.tv1.setOnClickListener {
-            viewModel.login("pitjarus","admin").observe(this, {
-                Log.e(TAG, "onCreate: ${it.status}")
+            viewModel.login("pitjarus", "admin").observe(this, {
+                CoroutineScope(Dispatchers.Main).launch {
+                    db.storeDao().insertStore(it.stores)
+                    startActivity(Intent(this@MainActivity, HomeActivity::class.java))
+                }
             })
         }
     }
