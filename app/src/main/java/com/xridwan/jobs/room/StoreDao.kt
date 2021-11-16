@@ -7,15 +7,15 @@ import androidx.room.Query
 @Dao
 interface StoreDao {
 
-    @Query("SELECT count(*) FROM Entity")
+    @Query("SELECT count(*) FROM Store")
     suspend fun getCount(): Int
 
-    @Query("SELECT * FROM Entity WHERE id= :id")
-    suspend fun getStore(id: Int): Entity
+    @Query("SELECT * FROM Store WHERE id= :id")
+    suspend fun getStore(id: Int): Store
 
-    @Query("SELECT * FROM Entity")
-    suspend fun getStoreList(): List<Entity>
+    @Query("SELECT * FROM Store")
+    suspend fun getStoreList(): List<Store>
 
     @Insert
-    suspend fun insertStore(store: List<Entity>)
+    suspend fun insert(store: List<Store>)
 }

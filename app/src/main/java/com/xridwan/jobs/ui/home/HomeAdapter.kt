@@ -4,20 +4,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.xridwan.jobs.databinding.ViewItemStoreBinding
-import com.xridwan.jobs.room.Entity
+import com.xridwan.jobs.room.Store
 
 class HomeAdapter : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
-    private var storeList = arrayListOf<Entity>()
+    private var storeList = arrayListOf<Store>()
 
-    fun setData(storeList: ArrayList<Entity>) {
+    fun setData(storeList: ArrayList<Store>) {
         this.storeList = storeList
         notifyDataSetChanged()
     }
 
     inner class ViewHolder(private val binding: ViewItemStoreBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: Entity) {
+        fun bind(data: Store) {
             with(binding) {
                 tvName.text = data.store_name
             }
